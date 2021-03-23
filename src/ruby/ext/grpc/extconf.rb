@@ -65,6 +65,8 @@ unless windows
   puts 'Building internal gRPC into ' + grpc_lib_dir
   nproc = 4
   nproc = Etc.nprocessors * 2 if Etc.respond_to? :nprocessors
+  nproc = ENV['GRPC_MAX_BUILD_PROCS'].to_i if ENV.key?('GRPC_MAX_BUILD_PROCS') && ENV['GRPC_MAX_BUILD_PROCS'].to_i > nproc
+  puts "Building with #{nproc} processes (GRPC_MAX_BUILD_PROCS=#{ENV['GRPC_MAX_BUILD_PROCS']})"
   make = bsd ? 'gmake' : 'make'
   system("#{make} -j#{nproc} -C #{grpc_root} #{grpc_lib_dir}/libgrpc.a CONFIG=#{grpc_config} Q=")
   exit 1 unless $? == 0
