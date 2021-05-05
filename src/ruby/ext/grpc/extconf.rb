@@ -65,6 +65,7 @@ unless windows
   puts 'Building internal gRPC into ' + grpc_lib_dir
   nproc = 4
   nproc = Etc.nprocessors * 2 if Etc.respond_to? :nprocessors
+  nproc = 16 if nproc > 16
   make = bsd ? 'gmake' : 'make'
   system("#{make} -j#{nproc} -C #{grpc_root} #{grpc_lib_dir}/libgrpc.a CONFIG=#{grpc_config} Q=")
   exit 1 unless $? == 0
